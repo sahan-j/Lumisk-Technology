@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lumiskatechnology.com/sitemap.xml
+Sitemap: https://lumisktechnology.com/sitemap.xml
