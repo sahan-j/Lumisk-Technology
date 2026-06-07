@@ -1,0 +1,130 @@
+/* ═══════════════════════════════════════════════════════════
+   CINEMATIC LOADER
+   Full-screen layered boot sequence. Tokens pulled from :root
+   (--bg / --accent / --accent2 / --display / --body / --muted).
+═══════════════════════════════════════════════════════════ */
+
+.cine-loader{
+  position:fixed;inset:0;z-index:100000;
+  overflow:hidden;cursor:none;background:transparent;
+  font-family:var(--body);
+}
+
+/* ── Curtain panels (opaque backdrop; split apart on exit) ───── */
+.cine-panel{
+  position:absolute;top:0;bottom:0;width:50.5%;
+  background:#070710;z-index:0;will-change:transform;
+  transition:transform 1s cubic-bezier(.7,0,.2,1);
+}
+.cine-panel.left{left:0}
+.cine-panel.right{right:0}
+.cine-loader.open .cine-panel.left{transform:translateX(-100%)}
+.cine-loader.open .cine-panel.right{transform:translateX(100%)}
+
+/* ── Stage (everything that fades out before the curtain opens) ─ */
+.cine-stage{position:absolute;inset:0;z-index:2;transition:opacity .5s ease}
+.cine-loader.fade .cine-stage{opacity:0}
+
+/* ── Radial glow behind the logo ─────────────────────────────── */
+.cine-glow{
+  position:absolute;left:50%;top:50%;width:92vmin;height:92vmin;
+  transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(circle at center,
+    rgba(109,92,255,.22),rgba(0,212,255,.05) 38%,transparent 66%);
+  filter:blur(8px);
+}
+
+/* ── Particle canvas ─────────────────────────────────────────── */
+.cine-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ── Film grain over everything ──────────────────────────────── */
+.cine-grain{
+  position:absolute;inset:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Terminal boot (top-left) ────────────────────────────────── */
+.cine-terminal{
+  position:absolute;top:30px;left:34px;max-width:60vw;
+  font-family:var(--body);font-weight:300;font-size:13px;
+  line-height:1.95;letter-spacing:.03em;
+  color:rgba(0,212,255,.7);text-shadow:0 0 12px rgba(0,212,255,.3);
+  white-space:pre;pointer-events:none;
+}
+.cine-ln{display:block}
+.cine-cur{
+  display:inline-block;width:7px;margin-left:3px;
+  color:rgba(0,212,255,.95);
+  animation:cineBlink 1s steps(1) infinite;
+}
+@keyframes cineBlink{50%{opacity:0}}
+
+/* ── Giant counter (bottom-right) ────────────────────────────── */
+.cine-counter{
+  position:absolute;right:42px;bottom:28px;
+  display:flex;align-items:flex-end;
+  font-family:var(--display);font-weight:800;color:#fff;line-height:.85;
+  font-variant-numeric:tabular-nums;
+  font-size:clamp(46px,8vw,72px);letter-spacing:-.03em;
+  transform-origin:right bottom;
+  transition:transform .25s cubic-bezier(.16,1,.3,1);
+}
+.cine-counter .cine-pct{
+  font-size:40%;color:var(--muted);font-weight:600;
+  margin-left:6px;margin-bottom:.38em;letter-spacing:0;
+}
+
+/* ── Word cycle (bottom-center) ──────────────────────────────── */
+.cine-word{
+  position:absolute;left:50%;bottom:36px;transform:translateX(-50%);
+  font-family:var(--body);font-weight:300;font-size:14px;
+  letter-spacing:.12em;color:var(--muted);white-space:nowrap;
+  transition:opacity .35s ease;
+}
+
+/* ── Progress bar (bottom) ───────────────────────────────────── */
+.cine-bar{position:absolute;left:0;bottom:0;width:100%;height:2px;background:rgba(255,255,255,.08)}
+.cine-bar i{
+  display:block;height:100%;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 12px var(--accent2),0 0 26px rgba(109,92,255,.5);
+}
+
+/* ── Welcome reveal (centered, behind the opening curtain) ───── */
+.cine-welcome{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
+  font-family:var(--display);font-weight:300;font-size:30px;
+  letter-spacing:.02em;color:#fff;opacity:0;pointer-events:none;
+  transition:opacity .8s ease .25s;
+}
+.cine-loader.open .cine-welcome{opacity:1}
+
+/* ── Short version (returning visit / reduced motion) ────────── */
+/* Solid backdrop (no curtain panels), quick logo fade + 2px bar. */
+.cine-loader.short{background:var(--bg);transition:opacity .25s ease}
+.cine-loader.short.fade{opacity:0}
+.cine-short-logo{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(30px,6vw,52px);letter-spacing:-.02em;color:#fff;
+  text-shadow:0 0 30px rgba(109,92,255,.45);
+  /* base opacity 1 so reduced-motion (animation disabled) still shows it */
+  opacity:1;animation:cineShortIn .4s ease;
+}
+@keyframes cineShortIn{from{opacity:0}to{opacity:1}}
+/* scope the bar easing to the short version so the full version's
+   per-frame width updates aren't smoothed/laggy */
+.cine-loader.short .cine-bar i{transition:width .5s cubic-bezier(.16,1,.3,1)}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media(max-width:700px){
+  .cine-terminal{font-size:11px;top:22px;left:20px}
+  .cine-counter{right:24px;bottom:22px}
+  .cine-word{bottom:30px}
+}
+
+/* ── Reduced motion: static, no curtain ──────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .cine-panel{display:none}
+  .cine-stage,.cine-word,.cine-counter,.cine-welcome{transition:none}
+}

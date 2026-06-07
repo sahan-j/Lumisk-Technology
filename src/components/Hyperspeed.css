@@ -1,0 +1,12 @@
+#lights {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+}
+
+/* Scoped to #lights so it doesn't affect the site's other WebGL canvases */
+#lights canvas {
+  width: 100%;
+  height: 100%;
+}
