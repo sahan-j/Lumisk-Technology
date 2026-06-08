@@ -46,7 +46,12 @@ export default function Nav() {
   return (
     <nav>
       <Link to="/" className="logo">Lumisk°</Link>
-      <button className="menu-btn" aria-label="Toggle menu" onClick={() => setOpen(o => !o)}>
+      <button
+        className="menu-btn"
+        aria-label="Toggle menu"
+        style={{touchAction:'manipulation'}}
+        onClick={() => setOpen(o => !o)}
+      >
         {open ? 'Close' : 'Menu'}
       </button>
       <div className={`nav-links${open ? ' open' : ''}`}>
