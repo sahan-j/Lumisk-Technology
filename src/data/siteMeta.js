@@ -54,7 +54,7 @@ export const faqs = [
   },
   {
     q: 'Do you provide web hosting in Sri Lanka?',
-    a: 'Yes — we use premium hosting providers including Hostinger and Namecheap. We handle complete setup including SSL certificate, domain configuration and email setup at no extra charge.',
+    a: 'We assist with hosting setup using premium providers (Hostinger, Namecheap). Hosting and domain costs are billed separately at actual rates — we handle the full setup process.',
   },
   {
     q: 'Can you build e-commerce websites in Sri Lanka?',

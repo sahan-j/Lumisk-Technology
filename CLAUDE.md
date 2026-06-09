@@ -184,5 +184,7 @@ Wrap a card with `<ElectricBorder>` for the animated border glow on hover (used 
 ## Domain
 
 `DOMAIN=lumisktechnology.com`
+`EMAIL=hello@lumisktechnology.com`
 
 All canonical URLs, `og:url`, schema.org `url`, sitemap, and robots.txt point to `https://lumisktechnology.com`.
+The canonical contact email everywhere (Footer, Contact page, JSON-LD) is `hello@lumisktechnology.com`.
