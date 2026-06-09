@@ -1,23 +1,22 @@
-name: Deploy to FTP
+name: Deploy to Namecheap
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: npm
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -25,17 +24,14 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to Namecheap via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SFTP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /home/sonypufv/lumisktechnology.com/
-          protocol: ftps
-          port: 21
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          port: 22
+          source: "dist/*"
+          target: "/home/sonypufv/lumisktechnology.com/"
+          strip_components: 1
+          overwrite: true
