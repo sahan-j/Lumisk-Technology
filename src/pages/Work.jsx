@@ -4,6 +4,9 @@ import { useReveal } from '../hooks/useReveal.js'
 import { useMagnetic } from '../hooks/useMagnetic.js'
 import WorkCardCanvas from '../components/WorkCardCanvas.jsx'
 import Antigravity from '../components/Antigravity.jsx'
+import Seo from '../components/Seo.jsx'
+import { pageMeta, webPageSchema, itemListSchema } from '../data/siteMeta.js'
+import { projects } from '../data/projects.js'
 
 export default function Work() {
   useReveal()
@@ -18,6 +21,15 @@ export default function Work() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/work'].title}
+        description={pageMeta['/work'].description}
+        path="/work"
+        jsonLd={[
+          webPageSchema('/work', pageMeta['/work'].title, pageMeta['/work'].description),
+          itemListSchema(projects),
+        ]}
+      />
       {/* Full-width Antigravity hero header — breaks out of the page container */}
       <div className="page-hero reveal">
         <div className="page-hero-bg">

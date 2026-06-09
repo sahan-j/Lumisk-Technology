@@ -4,6 +4,8 @@ import { useReveal } from '../hooks/useReveal.js'
 import { useMagnetic } from '../hooks/useMagnetic.js'
 import { useCardTilt } from '../hooks/useCardTilt.js'
 import Galaxy from '../components/Galaxy.jsx'
+import Seo from '../components/Seo.jsx'
+import { pageMeta, webPageSchema, serviceSchema, faqSchema, faqs } from '../data/siteMeta.js'
 
 export default function Services() {
   useReveal()
@@ -18,6 +20,16 @@ export default function Services() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/services'].title}
+        description={pageMeta['/services'].description}
+        path="/services"
+        jsonLd={[
+          webPageSchema('/services', pageMeta['/services'].title, pageMeta['/services'].description),
+          serviceSchema(),
+          faqSchema(),
+        ]}
+      />
       {/* Full-width Galaxy hero header — breaks out of the page container */}
       <div className="page-hero reveal">
         <div className="page-hero-bg">
@@ -43,6 +55,13 @@ export default function Services() {
       </div>
 
       <div className="page reveal" style={{ paddingTop: '90px' }}>
+        <p className="section-lead" style={{ marginTop: 0, maxWidth: '720px' }}>
+          Lumisk Technology offers a comprehensive range of web development services in Sri Lanka.
+          Whether you're a startup in Colombo or an established business across Sri Lanka, we deliver
+          professional, modern and affordable digital solutions tailored to your needs. Based in
+          Colombo, we serve clients across Sri Lanka — from Colombo and Gampaha to Kandy, Galle,
+          Matara and beyond.
+        </p>
         <div className="services-grid">
           <div className="service-card"><div className="si">/ 01</div><span className="s-arrow" aria-hidden="true">↗</span><h3>Web Applications</h3><p>End-to-end product builds — from interface to API to deployment. Fast, scalable, maintainable systems on React, FastAPI and Node.</p></div>
           <div className="service-card"><div className="si">/ 02</div><span className="s-arrow" aria-hidden="true">↗</span><h3>AI Integration</h3><p>Intelligent features for real products — RAG document search, chat assistants, automated workflows and data extraction powered by the Claude API.</p></div>
@@ -253,6 +272,19 @@ export default function Services() {
             <div className="term-body"><h4>Scope Changes</h4><p>Features or pages added beyond the agreed scope require a separate quote and timeline confirmation before any additional work begins.</p></div>
           </div>
 
+        </div>
+      </section>
+
+      <section className="section reveal">
+        <div className="section-head"><span className="section-num">05</span><span className="section-title">Frequently Asked Questions</span></div>
+        <p className="section-lead">Common questions about web development in Sri Lanka — pricing, timelines, hosting and more.</p>
+        <div className="faq-list">
+          {faqs.map((f, i) => (
+            <details className="faq-item" key={i}>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
         </div>
       </section>
 

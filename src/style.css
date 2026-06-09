@@ -1045,3 +1045,32 @@ footer::before{
   /* CTA band */
   .cta-band{padding-top:64px;padding-bottom:64px}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   FAQ ACCORDION (Services page) — native <details>, additive
+═══════════════════════════════════════════════════════════ */
+.faq-list{border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item summary{
+  list-style:none;cursor:pointer;
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(16px,2vw,20px);letter-spacing:-.01em;color:#fff;
+  padding:24px 40px 24px 8px;position:relative;
+  transition:color .3s;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:'+';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--display);font-weight:400;font-size:24px;color:var(--accent2);
+  transition:transform .3s;line-height:1;
+}
+.faq-item[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.faq-item summary:hover{color:var(--accent2)}
+.faq-item > p{
+  font-size:14px;color:var(--muted);line-height:1.9;
+  padding:0 40px 26px 8px;max-width:760px;
+}
+@media(max-width:480px){
+  .faq-item summary{font-size:15px;padding:18px 34px 18px 4px}
+  .faq-item > p{padding:0 8px 20px 4px}
+}

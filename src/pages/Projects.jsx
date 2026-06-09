@@ -5,7 +5,9 @@ import { useMagnetic } from '../hooks/useMagnetic.js'
 import WorkCardCanvas from '../components/WorkCardCanvas.jsx'
 import ElectricBorder from '../components/ElectricBorder.jsx'
 import LetterGlitch from '../components/LetterGlitch.jsx'
+import Seo from '../components/Seo.jsx'
 import { projects, CATEGORIES } from '../data/projects.js'
+import { pageMeta, webPageSchema, itemListSchema } from '../data/siteMeta.js'
 
 // Honor the OS "reduce motion" setting — freeze the electric border animation
 // (speed 0 still draws the border, it just doesn't move).
@@ -56,7 +58,7 @@ function ProjectModal({ project, onClose }) {
 
         <div className="modal-hero">
           {project.image ? (
-            <img src={project.image} alt={`${project.name} screenshot`} />
+            <img src={project.image} alt={`${project.name} screenshot`} loading="lazy" />
           ) : (
             <WorkCardCanvas sceneIndex={project.sceneIndex} container=".modal-hero" />
           )}
@@ -144,6 +146,15 @@ export default function Projects() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/projects'].title}
+        description={pageMeta['/projects'].description}
+        path="/projects"
+        jsonLd={[
+          webPageSchema('/projects', pageMeta['/projects'].title, pageMeta['/projects'].description),
+          itemListSchema(projects),
+        ]}
+      />
       {/* Full-width LetterGlitch hero header — breaks out of the page container */}
       <div className="page-hero reveal">
         <div className="page-hero-bg">

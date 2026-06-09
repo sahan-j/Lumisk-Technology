@@ -1,16 +1,19 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal.js'
 import { useMagnetic } from '../hooks/useMagnetic.js'
 import { useStatCounter } from '../hooks/useStatCounter.js'
 import ProfileCard from '../components/ProfileCard.jsx'
 import FallingText from '../components/FallingText.jsx'
 import Lightfall from '../components/Lightfall.jsx'
+import Seo from '../components/Seo.jsx'
+import { pageMeta, webPageSchema } from '../data/siteMeta.js'
 
 export default function About() {
   useReveal()
   useMagnetic()
   useStatCounter()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 150)
@@ -19,6 +22,12 @@ export default function About() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/about'].title}
+        description={pageMeta['/about'].description}
+        path="/about"
+        jsonLd={webPageSchema('/about', pageMeta['/about'].title, pageMeta['/about'].description)}
+      />
       {/* Full-width Lightfall hero header — breaks out of the page container */}
       <div className="page-hero reveal">
         <div className="page-hero-bg">
@@ -52,8 +61,8 @@ export default function About() {
         <div className="about-grid">
           <p className="about-lead">I design and build <span className="hl">complete web applications</span>, end to end.</p>
           <div>
-            <p className="about-body">My work sits at the intersection of clean engineering and considered design. I care as much about how a product feels as how it performs.</p>
-            <p className="about-body">Lately I've been building AI-powered systems with the Claude API, real-time interfaces with Three.js, and scalable backends in Python and Node — shipping products that feel as good as they look.</p>
+            <p className="about-body">Based in Colombo, Sri Lanka, my work sits at the intersection of clean engineering and considered design — serving clients across Sri Lanka and beyond. I care as much about how a product feels as how it performs.</p>
+            <p className="about-body">Lately I've been building AI-powered systems with the Claude API, real-time interfaces with Three.js, and scalable backends in Python and Node — shipping products that feel as good as they look, trusted by businesses in Colombo and across Sri Lanka.</p>
             <div className="about-stats">
               <div className="stat"><div className="n">5+</div><div className="l">Years</div></div>
               <div className="stat"><div className="n">40+</div><div className="l">Projects</div></div>
@@ -93,7 +102,7 @@ export default function About() {
             showUserInfo={true}
             enableTilt={true}
             enableMobileTilt={false}
-            onContactClick={() => { window.location.hash = '/contact' }}
+            onContactClick={() => navigate('/contact')}
             innerGradient="linear-gradient(145deg,#6d5cff44 0%,#00d4ff33 100%)"
             behindGlowEnabled={true}
             behindGlowColor="rgba(109, 92, 255, 0.45)"
@@ -121,6 +130,9 @@ export default function About() {
           <div className="skill-row" style={{'--w':'88%'}}><div className="skill-name">Node.js</div><div className="skill-meta"><span className="skill-tag">Backend</span><div className="skill-bar"><i></i></div></div></div>
           <div className="skill-row" style={{'--w':'85%'}}><div className="skill-name">Three.js / WebGL</div><div className="skill-meta"><span className="skill-tag">Graphics</span><div className="skill-bar"><i></i></div></div></div>
           <div className="skill-row" style={{'--w':'90%'}}><div className="skill-name">Database / SQL</div><div className="skill-meta"><span className="skill-tag">Data</span><div className="skill-bar"><i></i></div></div></div>
+          <div className="skill-row" style={{'--w':'88%'}}><div className="skill-name">E-commerce / PayHere</div><div className="skill-meta"><span className="skill-tag">Commerce</span><div className="skill-bar"><i></i></div></div></div>
+          <div className="skill-row" style={{'--w':'85%'}}><div className="skill-name">WhatsApp Business API</div><div className="skill-meta"><span className="skill-tag">Automation</span><div className="skill-bar"><i></i></div></div></div>
+          <div className="skill-row" style={{'--w':'90%'}}><div className="skill-name">SEO &amp; Performance</div><div className="skill-meta"><span className="skill-tag">Growth</span><div className="skill-bar"><i></i></div></div></div>
         </div>
       </section>
 

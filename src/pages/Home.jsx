@@ -4,6 +4,8 @@ import { useReveal } from '../hooks/useReveal.js'
 import { useMagnetic } from '../hooks/useMagnetic.js'
 import HeroParticles from '../components/HeroParticles.jsx'
 import WorkCardCanvas from '../components/WorkCardCanvas.jsx'
+import Seo from '../components/Seo.jsx'
+import { pageMeta, webPageSchema } from '../data/siteMeta.js'
 
 export default function Home() {
   useReveal()
@@ -44,14 +46,20 @@ export default function Home() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/'].title}
+        description={pageMeta['/'].description}
+        path="/"
+        jsonLd={webPageSchema('/', pageMeta['/'].title, pageMeta['/'].description)}
+      />
       <section className="hero">
         <HeroParticles />
-        <p className="eyebrow"><span>Full-stack Developer · Sri Lanka</span></p>
+        <p className="eyebrow"><span>Web Development Studio · Colombo, Sri Lanka</span></p>
         <h1>
           <span className="line"><span data-scramble>I build digital</span></span>
           <span className="line"><span><em>experiences</em> that work</span></span>
         </h1>
-        <p>Crafting fast, thoughtful products end to end — from interface to infrastructure, blending design sensibility with engineering depth.</p>
+        <p>Lumisk Technology is a web development studio based in Colombo, Sri Lanka — building fast, modern web applications and digital experiences for businesses across Sri Lanka and beyond. From simple websites to complex AI-powered systems.</p>
         <div className="hero-cta">
           <Link to="/work" className="btn" data-magnetic>View Work</Link>
           <Link to="/contact" className="btn ghost" data-magnetic>Get in touch</Link>
@@ -61,6 +69,7 @@ export default function Home() {
 
       <section className="section reveal">
         <div className="section-head"><span className="section-num">01</span><span className="section-title">What I do</span></div>
+        <p className="section-lead">Professional web development services for businesses in Sri Lanka — from Colombo startups to established companies nationwide.</p>
         <div className="services-grid">
           <div className="service-card"><div className="si">/ 01</div><h3>Web Applications</h3><p>End-to-end product builds on React, FastAPI and Node — fast, scalable, and maintainable.</p></div>
           <div className="service-card"><div className="si">/ 02</div><h3>AI Integration</h3><p>RAG document search, chat assistants and automated workflows powered by the Claude API.</p></div>

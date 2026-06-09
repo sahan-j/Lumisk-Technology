@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useReveal } from '../hooks/useReveal.js'
 import { useMagnetic } from '../hooks/useMagnetic.js'
 import Hyperspeed from '../components/Hyperspeed.jsx'
+import Seo from '../components/Seo.jsx'
+import { pageMeta, webPageSchema } from '../data/siteMeta.js'
 
 export default function Contact() {
   useReveal()
@@ -20,6 +22,12 @@ export default function Contact() {
 
   return (
     <>
+      <Seo
+        title={pageMeta['/contact'].title}
+        description={pageMeta['/contact'].description}
+        path="/contact"
+        jsonLd={webPageSchema('/contact', pageMeta['/contact'].title, pageMeta['/contact'].description)}
+      />
       {/* Full-width Hyperspeed hero header — breaks out of the page container */}
       <div className="page-hero reveal">
         <div className="page-hero-bg">
@@ -33,6 +41,11 @@ export default function Contact() {
       </div>
 
       <div className="page reveal" style={{ paddingTop: '90px' }}>
+        <p className="section-lead" style={{ marginTop: 0, maxWidth: '620px' }}>
+          Ready to build your website or web application? Lumisk Technology offers free initial
+          consultations for businesses across Sri Lanka. Get in touch today and let's discuss your
+          project.
+        </p>
         <div className="contact-wrap">
           <div className="contact-info">
             <h3>Email</h3>
@@ -40,7 +53,7 @@ export default function Contact() {
             <h3>Phone</h3>
             <a href="tel:+94773243784">+94 77 324 3784</a>
             <h3>Location</h3>
-            <p>Sri Lanka — working with clients worldwide</p>
+            <p>📍 Colombo, Sri Lanka — serving clients nationwide</p>
             <h3>Elsewhere</h3>
             <div className="contact-socials">
               <a href="https://github.com/sahan-j">Github</a>

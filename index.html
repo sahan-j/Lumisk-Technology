@@ -1,31 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-LK">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Lumisk Technology — Full-stack Developer in Sri Lanka</title>
-<meta name="description" content="Lumisk Technology — Full-stack developer building fast, thoughtful digital products end to end. Based in Sri Lanka.">
+<title>Web Development Company Sri Lanka | React, AI & 3D | Lumisk Technology</title>
+<meta name="description" content="Professional web development company in Colombo, Sri Lanka. Custom web apps, AI integration, e-commerce & 3D experiences. Starting from LKR 25,000. Free consultation." data-rh="true">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<link rel="canonical" href="https://lumisktechnology.com/" data-rh="true">
+
+<!-- Theme / mobile -->
 <meta name="theme-color" content="#050505">
-<meta property="og:title" content="Lumisk Technology — Full-stack Developer in Sri Lanka">
-<meta property="og:description" content="Lumisk Technology — Full-stack developer building fast, thoughtful digital products end to end. Based in Sri Lanka.">
-<meta property="og:site_name" content="Lumisk Technology">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://lumisktechnology.com">
+<meta name="msapplication-TileColor" content="#6d5cff">
+<meta name="format-detection" content="telephone=yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<!-- Geo targeting (Colombo, Sri Lanka) -->
+<meta name="geo.region" content="LK-1">
+<meta name="geo.placename" content="Colombo, Sri Lanka">
+<meta name="geo.position" content="6.9271;79.8612">
+<meta name="ICBM" content="6.9271, 79.8612">
+
+<!-- Open Graph (data-rh tags are replaced per-route by react-helmet-async) -->
+<meta property="og:title" content="Web Development Company Sri Lanka | Lumisk Technology" data-rh="true">
+<meta property="og:description" content="Professional web development company in Colombo, Sri Lanka. React, AI, 3D & e-commerce. From LKR 25,000." data-rh="true">
+<meta property="og:site_name" content="Lumisk Technology" data-rh="true">
+<meta property="og:type" content="website" data-rh="true">
+<meta property="og:url" content="https://lumisktechnology.com/" data-rh="true">
+<meta property="og:image" content="https://lumisktechnology.com/og-image.png" data-rh="true">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_LK" data-rh="true">
+<meta property="og:locale:alternate" content="si_LK">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" data-rh="true">
+<meta name="twitter:title" content="Web Development Company Sri Lanka | Lumisk Technology" data-rh="true">
+<meta name="twitter:description" content="Professional web development company in Colombo, Sri Lanka. React, AI, 3D & e-commerce. From LKR 25,000." data-rh="true">
+<meta name="twitter:image" content="https://lumisktechnology.com/og-image.png" data-rh="true">
+
+<!-- Icons -->
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/og-image.png">
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Sora:wght@200;300;400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Sora:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<!-- Structured data: Organization / LocalBusiness + Person (static for crawlers) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Lumisk Technology",
-  "url": "https://lumisktechnology.com",
-  "jobTitle": "Full-stack Developer",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "LK"
-  }
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://lumisktechnology.com/#website",
+      "url": "https://lumisktechnology.com/",
+      "name": "Lumisk Technology",
+      "inLanguage": "en-LK",
+      "publisher": { "@id": "https://lumisktechnology.com/#business" }
+    },
+    {
+      "@type": ["LocalBusiness", "ProfessionalService"],
+      "@id": "https://lumisktechnology.com/#business",
+      "name": "Lumisk Technology",
+      "url": "https://lumisktechnology.com",
+      "logo": "https://lumisktechnology.com/og-image.png",
+      "image": "https://lumisktechnology.com/og-image.png",
+      "description": "Professional web development company in Colombo, Sri Lanka — web apps, AI integration, e-commerce, WhatsApp automation and 3D experiences.",
+      "telephone": "+94773243784",
+      "email": "hello@lumisktechnology.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Colombo",
+        "addressRegion": "Western Province",
+        "addressCountry": "LK"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "6.9271",
+        "longitude": "79.8612"
+      },
+      "openingHours": "Mo-Sa 09:00-18:00",
+      "priceRange": "LKR 25,000 - LKR 500,000+",
+      "currenciesAccepted": "LKR",
+      "paymentAccepted": "Bank Transfer, Cash",
+      "areaServed": { "@type": "Country", "name": "Sri Lanka" },
+      "serviceArea": ["Colombo", "Gampaha", "Kandy", "Galle", "Matara", "Sri Lanka"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Web Development Services",
+        "itemListElement": [
+          { "@type": "Offer", "name": "Web Application Development", "description": "Custom React + FastAPI web applications", "price": "120000", "priceCurrency": "LKR" },
+          { "@type": "Offer", "name": "Website Design & Development", "description": "Professional business websites", "price": "25000", "priceCurrency": "LKR" },
+          { "@type": "Offer", "name": "AI Integration", "description": "Claude API powered intelligent features", "price": "75000", "priceCurrency": "LKR" },
+          { "@type": "Offer", "name": "E-commerce Development", "description": "Online stores with payment integration" },
+          { "@type": "Offer", "name": "WhatsApp Business Integration", "description": "WhatsApp Business API automation" }
+        ]
+      },
+      "sameAs": [
+        "https://github.com/sahan-j",
+        "https://www.linkedin.com/in/sahan-j/",
+        "https://www.facebook.com/sahanadithyajayalath"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://lumisktechnology.com/#founder",
+      "name": "Sahan Adithya Jayalath",
+      "jobTitle": "Full-stack Developer",
+      "worksFor": { "@id": "https://lumisktechnology.com/#business" },
+      "url": "https://lumisktechnology.com/about",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Colombo",
+        "addressCountry": "LK"
+      }
+    }
+  ]
 }
 </script>
 </head>
