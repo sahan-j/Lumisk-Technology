@@ -1,0 +1,5 @@
+# Force LF line endings for server-side config files
+.cpanel.yml text eol=lf
+.htaccess text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
