@@ -30,9 +30,11 @@ RewriteRule . /index.html [L]
 Options -Indexes
 
 # ── MIME types ──────────────────────────────────────────────
-AddType text/javascript .js
+AddType application/javascript .js
+AddType application/javascript .mjs
 AddType text/css .css
 AddType image/svg+xml .svg
+AddType application/json .json
 
 # ── Gzip compression ────────────────────────────────────────
 <IfModule mod_deflate.c>
