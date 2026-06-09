@@ -1,4 +1,4 @@
-name: Deploy to Namecheap
+name: Build and Deploy
 
 on:
   push:
@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -24,14 +26,10 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy via SFTP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 22
-          source: "dist/*"
-          target: "/home/sonypufv/lumisktechnology.com/"
-          strip_components: 1
-          overwrite: true
+      - name: Commit dist to repo
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add dist/ -f
+          git commit -m "build: update dist [skip ci]" || echo "No changes to commit"
+          git push
