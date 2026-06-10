@@ -1,7 +1,26 @@
+/* Font fallback metrics — makes system font match Syne/Sora proportions so
+   the swap is invisible and causes no layout shift (CLS fix). */
+@font-face {
+  font-family: 'Syne Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('sans-serif');
+  ascent-override: 90%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+  size-adjust: 100%;
+}
+@font-face {
+  font-family: 'Sora Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('sans-serif');
+  ascent-override: 89%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 97%;
+}
+
 :root{
   --bg:#050505;--fg:#fff;--muted:rgba(255,255,255,.42);--faint:rgba(255,255,255,.16);
   --line:rgba(255,255,255,.08);--accent:#6d5cff;--accent2:#00d4ff;
-  --display:'Syne',sans-serif;--body:'Sora',sans-serif;
+  --display:'Syne','Syne Fallback',sans-serif;--body:'Sora','Sora Fallback',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -1076,11 +1095,10 @@ footer::before{
 }
 
 /* ═══════════════════════════════════════════════════════════
-   CLS FIXES — reserve layout space before fonts/images load
+   CLS / PERFORMANCE FIXES
 ═══════════════════════════════════════════════════════════ */
-/* Reserve hero heading height so font swap doesn't shift layout */
-.hero h1{min-height:1.84em}
 /* Prevent unsized images from causing layout shifts */
 img{width:auto;height:auto}
-/* Explicit dimensions for avatar images */
 img[src*="avatar"]{width:100%;height:100%;object-fit:cover}
+/* Skip rendering off-screen sections until near viewport (reduces TBT) */
+.section{content-visibility:auto;contain-intrinsic-size:0 600px}
