@@ -2,4 +2,6 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/sonypufv/lumisktechnology.com/
+    - git -C $DEPLOYPATH checkout -- . 2>/dev/null || true
+    - git -C $DEPLOYPATH clean -fd 2>/dev/null || true
     - /bin/cp -R dist/. $DEPLOYPATH
