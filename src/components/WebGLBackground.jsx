@@ -1,27 +1,41 @@
 import { useEffect, useRef } from 'react'
-import * as THREE from 'three'
 
 export default function WebGLBackground() {
   const ref = useRef(null)
 
   useEffect(() => {
-    let timer, animId, renderer
+    let cancelled = false
+    let animId = null
+    let renderer = null
+    let mouseFn = null
+    let resizeFn = null
 
-    const init = () => {
+    // Dynamic import — the three-*.js chunk (597 kB) is NOT included in the
+    // initial bundle. It loads only after the 500ms delay, well inside the
+    // loader animation, so users never see a blank canvas.
+    const timer = setTimeout(async () => {
+      if (cancelled) return
       const canvas = ref.current
       if (!canvas) return
+
+      const THREE = await import('three')
+      if (cancelled) return
+
       const REDUCED = window.matchMedia('(prefers-reduced-motion:reduce)').matches
-      const MOBILE = window.matchMedia('(max-width:820px)').matches
+      const MOBILE  = window.matchMedia('(max-width:820px)').matches
+
       renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false })
       renderer.setPixelRatio(Math.min(devicePixelRatio, MOBILE ? 1 : 1.5))
       renderer.setSize(innerWidth, innerHeight)
-      const scene = new THREE.Scene()
-      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+
+      const scene   = new THREE.Scene()
+      const camera  = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
       const uniforms = {
-        uTime: { value: 0 },
+        uTime:  { value: 0 },
         uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-        uRes: { value: new THREE.Vector2(innerWidth, innerHeight) }
+        uRes:   { value: new THREE.Vector2(innerWidth, innerHeight) },
       }
+
       const vert = 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }'
       const frag = [
         'precision highp float;',
@@ -38,47 +52,40 @@ export default function WebGLBackground() {
         'vec3 col=mix(c1,c2,smoothstep(0.2,0.72,n));',
         'col=mix(col,c3,smoothstep(0.62,0.96,n)*0.55);',
         'col*=0.62;',
-        'gl_FragColor=vec4(col,1.0);}'
+        'gl_FragColor=vec4(col,1.0);}',
       ].join('\n')
+
       const quad = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 2),
         new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: frag, uniforms })
       )
       scene.add(quad)
-      const onMouse = e => uniforms.uMouse.value.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight)
-      window.addEventListener('mousemove', onMouse)
+
+      mouseFn  = e => uniforms.uMouse.value.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight)
+      resizeFn = () => { renderer.setSize(innerWidth, innerHeight); uniforms.uRes.value.set(innerWidth, innerHeight) }
+      window.addEventListener('mousemove', mouseFn)
+      window.addEventListener('resize', resizeFn)
+
       if (REDUCED) {
         renderer.render(scene, camera)
       } else {
         const loop = () => {
+          if (cancelled) return
           animId = requestAnimationFrame(loop)
           uniforms.uTime.value += 1 / 60
           renderer.render(scene, camera)
         }
         loop()
       }
-      const onResize = () => {
-        renderer.setSize(innerWidth, innerHeight)
-        uniforms.uRes.value.set(innerWidth, innerHeight)
-      }
-      window.addEventListener('resize', onResize)
-      // store cleanup refs on canvas so outer cleanup can reach them
-      canvas._glCleanup = () => {
-        cancelAnimationFrame(animId)
-        window.removeEventListener('mousemove', onMouse)
-        window.removeEventListener('resize', onResize)
-        renderer.dispose()
-      }
-    }
-
-    // Defer by 500ms — loader covers the page for ~2s so this is invisible.
-    // Pushes Three.js shader compilation off the critical-path main thread work
-    // that PageSpeed measures for TBT.
-    timer = setTimeout(init, 500)
+    }, 500)
 
     return () => {
+      cancelled = true
       clearTimeout(timer)
-      ref.current?._glCleanup?.()
+      if (animId)   cancelAnimationFrame(animId)
+      if (mouseFn)  window.removeEventListener('mousemove', mouseFn)
+      if (resizeFn) window.removeEventListener('resize', resizeFn)
+      if (renderer) renderer.dispose()
     }
   }, [])
 
