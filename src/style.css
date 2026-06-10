@@ -1074,3 +1074,13 @@ footer::before{
   .faq-item summary{font-size:15px;padding:18px 34px 18px 4px}
   .faq-item > p{padding:0 8px 20px 4px}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   CLS FIXES — reserve layout space before fonts/images load
+═══════════════════════════════════════════════════════════ */
+/* Reserve hero heading height so font swap doesn't shift layout */
+.hero h1{min-height:1.84em}
+/* Prevent unsized images from causing layout shifts */
+img{width:auto;height:auto}
+/* Explicit dimensions for avatar images */
+img[src*="avatar"]{width:100%;height:100%;object-fit:cover}
