@@ -18,6 +18,14 @@ export default function Home() {
       el.setAttribute('data-text', text)
       const REDUCED = window.matchMedia('(prefers-reduced-motion:reduce)').matches
       if (REDUCED) { el.textContent = text; return }
+      // Lock the line box to the real text's height so the wider random glyphs
+      // can't re-wrap the headline and shift the page (CLS). The wrapping line
+      // (.line, overflow:hidden) clips any transient overflow; extra width grows
+      // rightward only — harmless on a left-aligned, overflow-x:hidden layout.
+      const line = el.parentElement
+      const lockH = line.offsetHeight
+      const prevH = line.style.height
+      line.style.height = lockH + 'px'
       let frame = 0
       const dur = text.length * 2 + 20
       const tick = () => {
@@ -29,7 +37,7 @@ export default function Home() {
         }
         el.textContent = out; frame++
         if (frame < dur) requestAnimationFrame(tick)
-        else el.textContent = text
+        else { el.textContent = text; line.style.height = prevH }
       }
       tick()
     }

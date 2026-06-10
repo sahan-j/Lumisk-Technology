@@ -1,20 +1,25 @@
-/* Font fallback metrics — makes system font match Syne/Sora proportions so
-   the swap is invisible and causes no layout shift (CLS fix). */
+/* Font fallback metrics — makes the system fallback (Arial) occupy the SAME
+   width as Syne/Sora so text wraps identically and the web-font swap causes
+   no layout shift (CLS fix).
+   size-adjust values are measured: Syne is ~45.6% wider than Arial, Sora
+   ~13.8% wider. Without this the hero <h1> wrapped to 2 lines in the fallback
+   but 3 lines in Syne — a ~80px jump on swap (the main CLS source).
+   ascent/descent overrides reproduce each font's line-height:normal box. */
 @font-face {
   font-family: 'Syne Fallback';
-  src: local('Arial'), local('Helvetica Neue'), local('sans-serif');
-  ascent-override: 90%;
-  descent-override: 30%;
+  src: local('Arial'), local('Helvetica Neue');
+  size-adjust: 145.6%;
+  ascent-override: 68%;
+  descent-override: 15%;
   line-gap-override: 0%;
-  size-adjust: 100%;
 }
 @font-face {
   font-family: 'Sora Fallback';
-  src: local('Arial'), local('Helvetica Neue'), local('sans-serif');
-  ascent-override: 89%;
-  descent-override: 22%;
+  src: local('Arial'), local('Helvetica Neue');
+  size-adjust: 113.8%;
+  ascent-override: 88%;
+  descent-override: 23%;
   line-gap-override: 0%;
-  size-adjust: 97%;
 }
 
 :root{
