@@ -10,10 +10,12 @@ export default function WebGLBackground() {
     let mouseFn = null
     let resizeFn = null
 
-    // Dynamic import — the three-*.js chunk (597 kB) is NOT included in the
-    // initial bundle. It loads only after the 500ms delay, well inside the
-    // loader animation, so users never see a blank canvas.
-    const timer = setTimeout(async () => {
+    // Dynamic import — the three-*.js chunk (597 kB) is NOT in the initial
+    // bundle. Its load + evaluation is scheduled in an idle period so the heavy
+    // work yields to first paint / hydration and stays out of the interactive
+    // window (TBT). The loader covers the canvas while this spins up, and the
+    // idle timeout guarantees it still runs promptly if the tab stays busy.
+    const run = async () => {
       if (cancelled) return
       const canvas = ref.current
       if (!canvas) return
@@ -77,11 +79,15 @@ export default function WebGLBackground() {
         }
         loop()
       }
-    }, 500)
+    }
+
+    const ric = window.requestIdleCallback
+    const handle = ric ? ric(run, { timeout: 2000 }) : setTimeout(run, 500)
 
     return () => {
       cancelled = true
-      clearTimeout(timer)
+      if (ric && window.cancelIdleCallback) window.cancelIdleCallback(handle)
+      else clearTimeout(handle)
       if (animId)   cancelAnimationFrame(animId)
       if (mouseFn)  window.removeEventListener('mousemove', mouseFn)
       if (resizeFn) window.removeEventListener('resize', resizeFn)

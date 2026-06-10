@@ -14,12 +14,20 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
-          r3f: ['@react-three/fiber'],
-          gfx: ['ogl', 'postprocessing'],
-          physics: ['matter-js'],
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+        // Function form so react/jsx-runtime (and scheduler) land in `vendor`
+        // with the rest of React. The object form missed jsx-runtime, which
+        // then got grouped into the r3f chunk — and because r3f statically
+        // imports three, the entry (every component uses JSX) ended up eagerly
+        // loading both r3f and three on every page. Keeping React together in
+        // vendor breaks that chain: three/r3f now load only on demand.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (/[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'vendor'
+          if (id.includes('@react-three')) return 'r3f'
+          if (id.includes('postprocessing')) return 'postprocessing'
+          if (id.includes('ogl')) return 'ogl'
+          if (/[\\/]three[\\/]/.test(id)) return 'three'
+          if (id.includes('matter-js')) return 'physics'
         },
       },
     },

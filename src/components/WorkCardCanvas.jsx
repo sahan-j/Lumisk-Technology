@@ -1,5 +1,10 @@
 import { useEffect, useRef } from 'react'
-import * as THREE from 'three'
+
+// Three.js is loaded on demand (see below). The scene builders use this
+// module-level binding, which is assigned once the dynamic import resolves —
+// before any builder runs — so the `three` chunk stays out of the home
+// page's critical path.
+let THREE = null
 
 function blobs(sc, pal) {
   var arr = []
@@ -137,8 +142,9 @@ export default function WorkCardCanvas({ sceneIndex = 0, container = '.work-card
 
     let disposed = false
     let rn = null, sc, cam, update
-    let running = true, t = 0, raf = 0, probe = 0, lastW = 0, lastH = 0
-    let ro = null, vis = null
+    let running = false, t = 0, raf = 0, lastW = 0, lastH = 0
+    let io = null, ro = null
+    let visible = false, building = false
 
     // Sync renderer + camera to the canvas's *actual* box. Uses clientWidth/
     // clientHeight (the laid-out CSS box), never offsetWidth or fixed values.
@@ -153,42 +159,43 @@ export default function WorkCardCanvas({ sceneIndex = 0, container = '.work-card
       }
     }
 
-    // Build the WebGL renderer. Idempotent (gated on `rn`) and only proceeds
-    // once the canvas has real, non-zero dimensions — which is the whole fix:
-    // never initialize a 0×0 canvas. Returns true once successfully built.
-    const init = () => {
-      if (disposed || rn) return false
-      // Reading clientWidth/Height flushes pending layout, so when the DOM is
-      // already laid out (client-side nav / reload) we get the real size here
-      // and can init synchronously — no dependency on rAF firing.
+    // Build the WebGL renderer. Deferred until the card is near the viewport,
+    // so the three chunk + scene init never run on the home page's initial
+    // load (the cards sit below the hero). Idempotent and only proceeds once
+    // the canvas has real, non-zero dimensions.
+    const build = async () => {
+      if (disposed || rn || building) return
+      const w0 = cv.clientWidth, h0 = cv.clientHeight
+      if (w0 === 0 || h0 === 0) return     // wait for layout (ResizeObserver retriggers)
+      building = true
+
+      // Dynamic import — keeps `three` out of the initial bundle. Shared chunk,
+      // so it's only fetched/evaluated once across the whole app.
+      if (!THREE) THREE = await import('three')
+      if (disposed) { building = false; return }
+
       const w = cv.clientWidth, h = cv.clientHeight
-      if (w === 0 || h === 0) return false
+      if (w === 0 || h === 0) { building = false; return }
 
       let renderer
       try {
         renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true })
       } catch (e) {
-        return false                       // transient GL failure → let a later trigger retry
+        building = false                   // transient GL failure → let a later trigger retry
+        return
       }
       rn = renderer
+      if (ro) { ro.disconnect(); ro = null }
       rn.setPixelRatio(Math.min(devicePixelRatio, 1.5))
       const def = SCENES[sceneIndex % SCENES.length]
       sc = new THREE.Scene()
       cam = new THREE.PerspectiveCamera(55, w / h, 0.1, 100)
       cam.position.z = 6
-      rn.setSize(w, h, false)              // (3) size from real clientWidth/Height
+      rn.setSize(w, h, false)              // size from real clientWidth/Height
       lastW = w; lastH = h
       update = def.fn(sc, def.pal)
       rn.render(sc, cam)                   // paint one frame now — no blank flash
 
-      // Pause rendering while the card is offscreen.
-      vis = new IntersectionObserver(
-        es => es.forEach(e => { running = e.isIntersecting }),
-        { threshold: 0.05 }
-      )
-      vis.observe(card)
-
-      // (5) Keep the active renderer in sync on viewport changes.
       window.addEventListener('resize', syncSize)
 
       const loop = () => {
@@ -200,35 +207,34 @@ export default function WorkCardCanvas({ sceneIndex = 0, container = '.work-card
         rn.render(sc, cam)
       }
       raf = requestAnimationFrame(loop)
-      return true
     }
 
-    const tryInit = () => { if (init() && ro) { ro.disconnect(); ro = null } }
+    // Single observer: gates the (deferred) build the first time the card nears
+    // the viewport, and pauses the render loop whenever it's fully offscreen.
+    io = new IntersectionObserver(
+      es => es.forEach(e => {
+        running = e.isIntersecting
+        if (e.isIntersecting) { visible = true; build() }
+      }),
+      { rootMargin: '300px 0px', threshold: 0 }
+    )
+    io.observe(card)
 
-    // (1) ResizeObserver — the primary fix for "0 dimensions on first mount":
-    // it fires the moment the element gains a non-zero box, and we init then,
-    // then disconnect (we only need the first valid measurement).
+    // Fallback for the "0 dimensions on first mount" case: if the card is
+    // already visible but had no box yet, build once it gains a real size.
     ro = new ResizeObserver(entries => {
       for (const e of entries) {
-        if (e.contentRect.width > 0 && e.contentRect.height > 0) { tryInit(); break }
+        if (visible && e.contentRect.width > 0 && e.contentRect.height > 0) { build(); break }
       }
     })
     ro.observe(cv)
 
-    // Synchronous attempt — succeeds immediately when layout already exists.
-    tryInit()
-
-    // (2) Two-rAF fallback — guarantees a completed layout pass before init in
-    // the rare case the element is laid out after mount but no resize fires.
-    probe = requestAnimationFrame(() => { probe = requestAnimationFrame(tryInit) })
-
     return () => {
       disposed = true
+      if (io) io.disconnect()
       if (ro) ro.disconnect()
-      if (vis) vis.disconnect()
       window.removeEventListener('resize', syncSize)
       cancelAnimationFrame(raf)
-      cancelAnimationFrame(probe)
       if (rn) { rn.dispose(); rn = null }
     }
   }, [sceneIndex, container])

@@ -1,4 +1,4 @@
-import{g as e,c as t}from"./vendor-D6J4kmr7.js";var n={exports:{}};
+import{g as e,c as t}from"./vendor-pDC8ZdVp.js";var n={exports:{}};
 /*!
  * matter-js 0.20.0 by @liabru
  * http://brm.io/matter-js/
